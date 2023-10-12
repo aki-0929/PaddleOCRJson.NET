@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+        <LangVersion>preview</LangVersion>
+        <PackageId>PaddleOCRJson.NET</PackageId>
+        <Title>PaddleOCRJson.NET</Title>
+        <Authors>aki-0929</Authors>
+        <Description>PaddleOCR-json .net 的封装
+PaddleOCR-json .net wrapper.</Description>
+        <Copyright></Copyright>
+        <PackageProjectUrl>https://github.com/aki-0929/PaddleOCRJson.NET</PackageProjectUrl>
+    </PropertyGroup>
+
+</Project>
