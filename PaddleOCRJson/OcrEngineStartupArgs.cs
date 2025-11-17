@@ -1,15 +1,18 @@
-﻿using System;
+﻿#region
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using PaddleOCRJson.Enums.StartupArgs;
-using PaddleOCRJson.Extensions;
+using System.Net;
+
+#endregion
 
 namespace PaddleOCRJson;
 
 public class OcrEngineStartupArgs
 {
-    internal readonly string EnginePath;
     internal readonly OcrEngineMode EngineMode;
+    internal readonly string EnginePath;
     internal readonly Dictionary<string, object> StartupArgs;
 
 
@@ -26,16 +29,26 @@ public class OcrEngineStartupArgs
         return string.Join(" ", StartupArgs.Select(it => $"-{it.Key}=\"{it.Value}\""));
     }
 
+    #region 自定义参数
+
+    public OcrEngineStartupArgs WithCustom(string argName, object value)
+    {
+        StartupArgs[argName] = value;
+        return this;
+    }
+
+    #endregion
+
     #region 工作模式
 
-    public static OcrEngineStartupArgs WithTcpMode(string enginePath, ListenAddresses address, ushort port)
+    public static OcrEngineStartupArgs WithTcpMode(string enginePath, IPAddress address, ushort port)
     {
         return new OcrEngineStartupArgs(enginePath, OcrEngineMode.Tcp)
         {
             StartupArgs =
             {
                 ["port"] = port,
-                ["addr"] = address.RealToString()
+                ["addr"] = address.ToString()
             }
         };
     }
@@ -48,86 +61,64 @@ public class OcrEngineStartupArgs
 
     #endregion
 
-    #region 自定义参数
-
-    public OcrEngineStartupArgs Custom(string argName, object value)
-    {
-        StartupArgs[argName] = value;
-        return this;
-    }
-
-    #endregion
-
     #region 常用参数
 
-    public OcrEngineStartupArgs UseGpu(bool value)
-    {
-        StartupArgs["use_gpu"] = value;
-        return this;
-    }
-
-    public OcrEngineStartupArgs UseTensorrt(bool value)
-    {
-        StartupArgs["use_tensorrt"] = value;
-        return this;
-    }
-
-    public OcrEngineStartupArgs GpuId(int value)
-    {
-        StartupArgs["gpu_id"] = value;
-        return this;
-    }
-
-    public OcrEngineStartupArgs GpuMem(int value)
-    {
-        StartupArgs["gpu_mem"] = value;
-        return this;
-    }
-
-    public OcrEngineStartupArgs CpuThreads(int value)
+    public OcrEngineStartupArgs WithCpuThreads(int value)
     {
         StartupArgs["cpu_threads"] = value;
         return this;
     }
 
-    public OcrEngineStartupArgs EnableMkldnn(bool value)
+    public OcrEngineStartupArgs WithCpuMem(int value)
+    {
+        StartupArgs["cpu_mem"] = value;
+        return this;
+    }
+
+    public OcrEngineStartupArgs WithEnableMkldnn(bool value)
     {
         StartupArgs["enable_mkldnn"] = value;
         return this;
     }
 
-    public OcrEngineStartupArgs Precision(Precisions value)
+    public OcrEngineStartupArgs WithPrecision(string value)
     {
-        StartupArgs["precision"] = value.RealToString();
+        StartupArgs["precision"] = value;
         return this;
     }
 
-    public OcrEngineStartupArgs Benchmark(bool value)
+    public OcrEngineStartupArgs WithBenchmark(bool value)
     {
         StartupArgs["benchmark"] = value;
         return this;
     }
 
-    public OcrEngineStartupArgs Output(string value)
+    public OcrEngineStartupArgs WithOutput(string value)
     {
         StartupArgs["output"] = value;
         return this;
     }
 
     [Obsolete("Not valid in current ver: 1.3.1")]
-    public OcrEngineStartupArgs Type(Types value)
+    public OcrEngineStartupArgs WithType(string value)
     {
-        StartupArgs["type"] = value.RealToString();
+        StartupArgs["type"] = value;
         return this;
     }
 
-    public OcrEngineStartupArgs ConfigPath(string value)
+    public OcrEngineStartupArgs WithConfigPath(string value)
     {
         StartupArgs["config_path"] = value;
         return this;
     }
 
-    public OcrEngineStartupArgs EnsureAscii(bool value)
+    public OcrEngineStartupArgs WithModelsPath(string value)
+    {
+        StartupArgs["models_path"] = value;
+        return this;
+    }
+
+    public OcrEngineStartupArgs WithEnsureAscii(bool value)
     {
         StartupArgs["ensure_ascii"] = value;
         return this;
@@ -135,58 +126,57 @@ public class OcrEngineStartupArgs
 
     #endregion
 
-
     #region DET检测相关
 
-    public OcrEngineStartupArgs DetModelDir(string value)
+    public OcrEngineStartupArgs WithDetModelDir(string value)
     {
         StartupArgs["det_model_dir"] = value;
         return this;
     }
 
-    public OcrEngineStartupArgs LimitType(LimitTypes value)
+    public OcrEngineStartupArgs WithLimitType(string value)
     {
-        StartupArgs["limit_type"] = value.RealToString();
+        StartupArgs["limit_type"] = value;
         return this;
     }
 
-    public OcrEngineStartupArgs LimitSideLen(int value)
+    public OcrEngineStartupArgs WithLimitSideLen(int value)
     {
         StartupArgs["limit_side_len"] = value;
         return this;
     }
 
-    public OcrEngineStartupArgs DetDbThresh(double value)
+    public OcrEngineStartupArgs WithDetDbThresh(double value)
     {
         StartupArgs["det_db_thresh"] = value;
         return this;
     }
 
-    public OcrEngineStartupArgs DetDbBoxThresh(double value)
+    public OcrEngineStartupArgs WithDetDbBoxThresh(double value)
     {
         StartupArgs["det_db_box_thresh"] = value;
         return this;
     }
 
-    public OcrEngineStartupArgs DetDbUnclipRatio(double value)
+    public OcrEngineStartupArgs WithDetDbUnclipRatio(double value)
     {
         StartupArgs["det_db_unclip_ratio"] = value;
         return this;
     }
 
-    public OcrEngineStartupArgs UseDilation(bool value)
+    public OcrEngineStartupArgs WithUseDilation(bool value)
     {
         StartupArgs["use_dilation"] = value;
         return this;
     }
 
-    public OcrEngineStartupArgs DetDbScoreMode(string value)
+    public OcrEngineStartupArgs WithDetDbScoreMode(string value)
     {
-        StartupArgs["use_dilation"] = value;
+        StartupArgs["det_db_score_mode"] = value;
         return this;
     }
 
-    public OcrEngineStartupArgs Visualize(bool value)
+    public OcrEngineStartupArgs WithVisualize(bool value)
     {
         StartupArgs["visualize"] = value;
         return this;
@@ -194,28 +184,27 @@ public class OcrEngineStartupArgs
 
     #endregion
 
-
     #region CLS方向分类相关
 
-    public OcrEngineStartupArgs UseAngleCls(bool value)
+    public OcrEngineStartupArgs WithUseAngleCls(bool value)
     {
         StartupArgs["use_angle_cls"] = value;
         return this;
     }
 
-    public OcrEngineStartupArgs ClsModelDir(string value)
+    public OcrEngineStartupArgs WithClsModelDir(string value)
     {
         StartupArgs["cls_model_dir"] = value;
         return this;
     }
 
-    public OcrEngineStartupArgs ClsThresh(double value)
+    public OcrEngineStartupArgs WithClsThresh(double value)
     {
         StartupArgs["cls_thresh"] = value;
         return this;
     }
 
-    public OcrEngineStartupArgs ClsBatchNum(int value)
+    public OcrEngineStartupArgs WithClsBatchNum(int value)
     {
         StartupArgs["cls_batch_num"] = value;
         return this;
@@ -223,34 +212,33 @@ public class OcrEngineStartupArgs
 
     #endregion
 
-
     #region REC文本识别相关
 
-    public OcrEngineStartupArgs RecModelDir(string value)
+    public OcrEngineStartupArgs WithRecModelDir(string value)
     {
         StartupArgs["rec_model_dir"] = value;
         return this;
     }
 
-    public OcrEngineStartupArgs RecBatchNum(int value)
+    public OcrEngineStartupArgs WithRecBatchNum(int value)
     {
         StartupArgs["rec_batch_num"] = value;
         return this;
     }
 
-    public OcrEngineStartupArgs RecCharDictPath(string value)
+    public OcrEngineStartupArgs WithRecCharDictPath(string value)
     {
         StartupArgs["rec_char_dict_path"] = value;
         return this;
     }
 
-    public OcrEngineStartupArgs RecImgH(int value)
+    public OcrEngineStartupArgs WithRecImgH(int value)
     {
         StartupArgs["rec_img_h"] = value;
         return this;
     }
 
-    public OcrEngineStartupArgs RecImgW(int value)
+    public OcrEngineStartupArgs WithRecImgW(int value)
     {
         StartupArgs["rec_img_w"] = value;
         return this;
@@ -260,25 +248,25 @@ public class OcrEngineStartupArgs
 
     #region 版面分析相关
 
-    public OcrEngineStartupArgs LayoutModelDir(string value)
+    public OcrEngineStartupArgs WithLayoutModelDir(string value)
     {
         StartupArgs["layout_model_dir"] = value;
         return this;
     }
 
-    public OcrEngineStartupArgs LayoutModelPath(string value)
+    public OcrEngineStartupArgs WithLayoutDictPath(string value)
     {
         StartupArgs["layout_dict_path"] = value;
         return this;
     }
 
-    public OcrEngineStartupArgs LayoutScoreThreshold(double value)
+    public OcrEngineStartupArgs WithLayoutScoreThreshold(double value)
     {
         StartupArgs["layout_score_threshold"] = value;
         return this;
     }
 
-    public OcrEngineStartupArgs LayoutNmsThreshold(double value)
+    public OcrEngineStartupArgs WithLayoutNmsThreshold(double value)
     {
         StartupArgs["layout_nms_threshold"] = value;
         return this;
@@ -286,68 +274,27 @@ public class OcrEngineStartupArgs
 
     #endregion
 
-    #region 表格结构相关
-
-    public OcrEngineStartupArgs TableModelDir(string value)
-    {
-        StartupArgs["table_model_dir"] = value;
-        return this;
-    }
-
-    public OcrEngineStartupArgs TableMaxLen(int value)
-    {
-        StartupArgs["table_max_len"] = value;
-        return this;
-    }
-
-    public OcrEngineStartupArgs TableBatchNum(int value)
-    {
-        StartupArgs["table_batch_num"] = value;
-        return this;
-    }
-
-    public OcrEngineStartupArgs MergeNoSpanStructure(bool value)
-    {
-        StartupArgs["merge_no_span_structure"] = value;
-        return this;
-    }
-
-    public OcrEngineStartupArgs TableCharDictPath(string value)
-    {
-        StartupArgs["table_char_dict_path"] = value;
-        return this;
-    }
-
-    #endregion
-
-
     #region 前处理相关
 
-    public OcrEngineStartupArgs Det(bool value)
+    public OcrEngineStartupArgs WithDet(bool value)
     {
         StartupArgs["det"] = value;
         return this;
     }
 
-    public OcrEngineStartupArgs Rec(bool value)
+    public OcrEngineStartupArgs WithRec(bool value)
     {
         StartupArgs["rec"] = value;
         return this;
     }
 
-    public OcrEngineStartupArgs Cls(bool value)
+    public OcrEngineStartupArgs WithCls(bool value)
     {
         StartupArgs["cls"] = value;
         return this;
     }
 
-    public OcrEngineStartupArgs Table(bool value)
-    {
-        StartupArgs["table"] = value;
-        return this;
-    }
-
-    public OcrEngineStartupArgs Layout(bool value)
+    public OcrEngineStartupArgs WithLayout(bool value)
     {
         StartupArgs["layout"] = value;
         return this;

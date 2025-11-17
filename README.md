@@ -35,31 +35,31 @@ var enginePath = "PaddleOCR-json/PaddleOCR-json.exe";
 ###	2. 设置引擎模式和其他参数
 #### 2.1. 管道模式
 ```
-var startupArgs = OrEngineStartupArgs.WithPipeMode(enginePath);
+var startupArgs = OcrEngineStartupArgs.WithPipeMode(enginePath);
 using var engine = new OcrEngine(startupArgs);
-using var cli = engine.CreateClient(); // using var cli = new OcrClient(engine)
+using var cli = engine.CreateClient(); // 或者: using var cli = new OcrPipeClient(engine)
 ```
 
 #### 2.2. 自托管TCP模式
 ```
-var startupArgs = OcrEngineStartupArgs.WithTcpMode(_enginePath, ListenAddresses.Loopback, 0); // 设置监听和端口号
+var startupArgs = OcrEngineStartupArgs.WithTcpMode(enginePath, IPAddress.Loopback, 0); // 设置监听地址和端口号
 using var engine = new OcrEngine(startupArgs);
-using var cli = engine.CreateClient(); // using var cli = new OcrClient(engine)
+using var cli = engine.CreateClient(); // 或者: using var cli = new OcrTcpClient(new IPEndPoint(IPAddress.Loopback, engine.Port))
 ```
 
 #### 2.3. 远程TCP模式
 ```
-using var cli = new OcrClient(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 12345)); // IP和端口嘛
+using var cli = new OcrTcpClient(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 12345)); // IP和端口嘛
 ```
 
 #### 2.4. 更多参数(主要是自用, 随缘更新, 没更新的话下面的自定义参数就可以凑活凑活)
 ```
 startupArgs
-	.EnableMkldnn(true)             // 启用Mkldnn
-	.CpuThreads(10)                 // 设置线程数
-	.Custom("arg_int",1)            // 自定义int参数
-	.Custom("arg_bool",true)        // 自定义bool参数
-	.Custom("arg_str","xxxx");      // 自定义str参数
+	.WithEnableMkldnn(true)             // 启用Mkldnn
+	.WithCpuThreads(10)                 // 设置线程数
+	.WithCustom("arg_int",1)            // 自定义int参数
+	.WithCustom("arg_bool",true)        // 自定义bool参数
+	.WithCustom("arg_str","xxxx");      // 自定义str参数
 ```
 
 ### 3. 执行操作 
@@ -67,7 +67,7 @@ startupArgs
 var ret = string.Empty;
 ret = cli.FromImageBytes(new byte[]{...});  // byte[] 会转到 base64
 ret = cli.FromBase64("...");                // base64
-ret = cli.FromImageFile("test.png");        // 为了避免转义(偷懒)的问题, 读入byte[]后也会转到base64.
+ret = cli.FromImageFile("test.png");        // 直接使用文件路径
 ret = cli.FromClipboard();                  // 没啥好说的
 ```
 

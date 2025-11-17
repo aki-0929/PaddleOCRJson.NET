@@ -1,15 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
-        <LangVersion>preview</LangVersion>
-        <PackageId>PaddleOCRJson.NET</PackageId>
-        <Title>PaddleOCRJson.NET</Title>
-        <Authors>aki-0929</Authors>
-        <Description>PaddleOCR-json .net 的封装
-PaddleOCR-json .net wrapper.</Description>
-        <Copyright></Copyright>
-        <PackageProjectUrl>https://github.com/aki-0929/PaddleOCRJson.NET</PackageProjectUrl>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+    <PackageId>PaddleOCRJson.NET</PackageId>
+    <Version>1.1.0</Version>
+    <LangVersion>preview</LangVersion>
+    <Title>PaddleOCRJson.NET</Title>
+    <Authors>aki-0929</Authors>
+    <Description>
+      PaddleOCR-json .net 的封装
+      PaddleOCR-json .net wrapper.
+    </Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/aki-0929/PaddleOCRJson.NET</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <Nullable>enable</Nullable>
+    <PackageProjectUrl>https://github.com/aki-0929/PaddleOCRJson.NET</PackageProjectUrl>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <None Include="..\README.md" Pack="true" PackagePath="\"/>
+  </ItemGroup>
 
 </Project>

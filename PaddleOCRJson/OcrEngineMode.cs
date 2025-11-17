@@ -1,8 +1,7 @@
-﻿namespace PaddleOCRJson
+﻿namespace PaddleOCRJson;
+
+public enum OcrEngineMode
 {
-    public enum OcrEngineMode
-    {
-        Pipe,
-        Tcp,
-    }
+    Pipe,
+    Tcp
 }
